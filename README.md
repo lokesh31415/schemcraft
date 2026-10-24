@@ -20,11 +20,17 @@ unified command model that humans and AI agents share.
 
 ---
 
-## Disclaimer & Attribution
+## Inspiration & Attribution
 
-SchemCraft is an independent open-source project; it is **not affiliated with or endorsed by
-xschem or its author (Stefan Frederik Schippers)**. Please do not report SchemCraft issues to the
-upstream xschem project.
+SchemCraft is heavily inspired by [**xschem**](https://github.com/StefanSchippers/xschem), the
+popular open-source schematic capture and netlisting tool created by **Stefan Frederik Schippers**.
+Our goal is to stay compatible with xschem's `.sch` and `.sym` file formats and port proven
+netlisting concepts into a clean, modular Rust architecture with a modern cross-platform UI
+(`egui` + `wgpu`), web support, and AI-first workflows.
+
+SchemCraft is an independent project and is not affiliated with or endorsed by xschem or its
+author—please keep any SchemCraft bug reports or questions in this repository rather than upstream
+xschem.
 
 - **License:** `GPL-3.0-or-later` (see [`LICENSE`](./LICENSE) and [`ATTRIBUTION.md`](./ATTRIBUTION.md)).
 
