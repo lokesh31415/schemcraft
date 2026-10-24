@@ -1,0 +1,13 @@
+[package]
+name = "schemcraft-ui-egui"
+description = "egui/eframe/wgpu front end (swappable; nothing below this layer depends on it)"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+schemcraft-engine.workspace = true
+
+[lints]
+workspace = true

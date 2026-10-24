@@ -1,0 +1,18 @@
+[package]
+name = "schemcraft-engine"
+description = "Command registry and session: every user-visible action is a command"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+schemcraft-core.workspace = true
+schemcraft-format.workspace = true
+schemcraft-netlist.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+
+[lints]
+workspace = true
