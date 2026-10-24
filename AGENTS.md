@@ -8,9 +8,28 @@ License: **GPL-3.0-or-later**. Every source file starts with `SPDX-License-Ident
 SchemCraft is an independent project, not affiliated with or endorsed by xschem or its author.
 
 ## Start every session here
-1. Read `plan/STATUS.md` (current milestone, next task), then the task in `plan/execution-plan.md`
-   and the relevant `plan/architecture.md` section.
-2. Decisions live in `plan/adr/`. Add a new ADR for any decision that changes them.
+1. Read `plan/STATUS.md` (current milestone, next task, and **Developer Profile / Teaching Mode**),
+   then the task in `plan/execution-plan.md` and the relevant `plan/architecture.md` section.
+2. Check the **Developer Profile** in `plan/STATUS.md`. If it is missing or unset, **ask the
+   developer** about their experience level with (a) Rust and (b) Schematic Capture / EDA tools
+   before writing code, and record their answer in `plan/STATUS.md`.
+3. Decisions live in `plan/adr/`. Add a new ADR for any decision that changes them.
+
+## Teaching-First Development (No Black Boxes)
+Developers on this project (including the lead author) may be learning Rust and schematic capture
+concepts while building SchemCraft. **Never dump large black-box implementations.**
+- **Work in Teaching Phases** for every task:
+  1. **Concept & Mental Model:** Briefly explain the EDA/xschem concept we are tackling and the
+     Rust pattern we will use to model it (and *why*).
+  2. **Small, Idiomatic Code Slice:** Write one small, self-contained, testable slice of code with
+     clear doc-comments explaining non-obvious Rust syntax or domain rules.
+  3. **Walkthrough & Check-in:** Walk through the key lines, update the living handbook in `docs/`,
+     and pause to let the developer review or ask questions before moving to the next slice.
+- **`docs/` is a first-class deliverable.** Maintain `docs/` so any newcomer reading `docs/README.md`
+  can learn:
+  - `docs/01-eda-and-xschem/` — schematic capture, symbols, pins, wires, nets, netlisting, xschem format.
+  - `docs/02-rust-for-schemcraft/` — Rust concepts taught directly through SchemCraft's own code.
+  - `docs/03-architecture/` — layering, command engine, AI safety, rendering.
 
 ## Reference material (`reference/`, gitignored, never committed)
 - `reference/xschem` (GPL-2.0-or-later): **may be read and ported** (file formats, netlisting,
