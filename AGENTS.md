@@ -7,13 +7,25 @@ anything a person can do, an agent can do.
 License: **GPL-3.0-or-later**. Every source file starts with `SPDX-License-Identifier: GPL-3.0-or-later`.
 SchemCraft is an independent project, not affiliated with or endorsed by xschem or its author.
 
-## Start every session here
-1. Read `plan/STATUS.md` (current milestone, next task, and **Developer Profile / Teaching Mode**),
-   then the task in `plan/execution-plan.md` and the relevant `plan/architecture.md` section.
-2. Check the **Developer Profile** in `plan/STATUS.md`. If it is missing or unset, **ask the
+## Start & End of Every Session (Seamless Context Continuity)
+`plan/` is our single source of truth across sessions (no separate `memory_bank/` folder).
+1. **At the start of every session:** Read `plan/STATUS.md` (Developer Profile, Teaching Progress,
+   Active Focus, Last Completed Slice, Immediate Next Slice, and Key Context), then the task in
+   `plan/execution-plan.md` and the relevant `plan/architecture.md` section.
+2. **Check the Developer Profile** in `plan/STATUS.md`. If it is missing or unset, **ask the
    developer** about their experience level with (a) Rust and (b) Schematic Capture / EDA tools
    before writing code, and record their answer in `plan/STATUS.md`.
-3. Decisions live in `plan/adr/`. Add a new ADR for any decision that changes them.
+3. **At the end of every Teaching Phase / task:** Update `plan/STATUS.md` with what was just
+   completed, what concepts were added to `docs/`, and the exact next slice so a new session can
+   resume at any moment with zero lost context.
+4. Decisions live in `plan/adr/`. Add a new ADR for any decision that changes them.
+
+## Git & Version Control (No Auto-Commit)
+- **NEVER run `git commit`, `git push`, `git tag`, or any history-rewriting git command without the
+  user's explicit approval in the current turn.**
+- You may run read-only git commands (`git status`, `git diff`, `git log`) freely to inspect state.
+- When a teaching phase or slice is complete and checks pass, leave the changes in the working tree
+  and ask the user if they would like to commit (or let them commit themselves).
 
 ## Teaching-First Development (No Black Boxes)
 Developers on this project (including the lead author) may be learning Rust and schematic capture
