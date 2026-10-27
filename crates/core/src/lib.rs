@@ -1,6 +1,15 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-//! SchemCraft core data model (layer L0). No UI, I/O or platform dependencies,
-//! so it compiles to wasm.
+//! SchemCraft canonical domain model (layer L0).
+//!
+//! No UI, I/O or platform dependencies, so it compiles cleanly to `wasm32-unknown-unknown`.
+//!
+//! ### Module Layout
+//! - [`geometry`] — 2D coordinate primitives ([`Point`], [`Rotation`]).
+//! - [`props`] — Deterministic key-value [`Properties`] and [`XschemHeaders`] passthrough.
+//! - [`graphics`] — Semantic [`LayerRole`] and 2D drawing primitives ([`Graphics`], [`Line`],
+//!   [`Rect`], [`Arc`], [`Polygon`], [`Text`]).
+//! - [`document`] — Electrical domain objects ([`Pin`], [`PinDirection`], [`Wire`], [`Instance`])
+//!   and top-level [`Symbol`], [`Schematic`], and [`Document`] types.
 #![deny(
     clippy::unwrap_used,
     clippy::expect_used,
@@ -10,36 +19,14 @@
     clippy::unreachable
 )]
 
-use serde::{Deserialize, Serialize};
+pub mod document;
+pub mod geometry;
+pub mod graphics;
+pub mod props;
 
-/// A point in schematic coordinates (xschem uses f64 user units).
-#[derive(Debug, Clone, Copy, PartialEq, Default, Serialize, Deserialize)]
-pub struct Point {
-    pub x: f64,
-    pub y: f64,
-}
-
-/// A wire segment connecting two points.
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct Wire {
-    pub a: Point,
-    pub b: Point,
-    /// Net label property string (xschem `lab=`), if any.
-    pub label: Option<String>,
-}
-
-/// A schematic: the objects that make up one `.sch` document.
-#[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
-pub struct Schematic {
-    pub wires: Vec<Wire>,
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn empty_schematic_has_no_wires() {
-        assert!(Schematic::default().wires.is_empty());
-    }
-}
+pub use document::{
+    DEFAULT_PIN_SIZE, Document, Instance, Pin, PinDirection, Schematic, Symbol, Wire,
+};
+pub use geometry::{Point, Rotation};
+pub use graphics::{Arc, Graphics, LayerRole, Line, Polygon, Rect, Text};
+pub use props::{Properties, XschemHeaders};

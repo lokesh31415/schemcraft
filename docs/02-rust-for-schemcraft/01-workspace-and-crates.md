@@ -1,6 +1,6 @@
-# 1. Workspaces, Crates, and Layering in Rust
+# 1. Workspaces, Crates, Modules, and Layering in Rust
 
-If you are new to Rust, the first thing you notice in SchemCraft is that we don't have just one `src/` folder. Instead, we have a root [`Cargo.toml`](file:///Users/loki/Workspace/GitHub_Repos/xschem_rust/Cargo.toml) and several sub-folders under `crates/` and `apps/`.
+If you are new to Rust, the first thing you notice in SchemCraft is that we don't have just one `src/` folder. Instead, we have a root [`Cargo.toml`](file:///Users/loki/Workspace/GitHub_Repos/xschem_rust/Cargo.toml), several crates under `crates/` and `apps/`, and small focused module files inside each crate.
 
 Here is why, and how to read it.
 
@@ -11,7 +11,30 @@ In Rust, the unit of compilation is called a **crate** (similar to a package or 
 - **Library crate (`src/lib.rs`):** Reusable code that does not have a `main()` function. All our folders in `crates/*` are library crates.
 - **Binary crate (`src/main.rs`):** An executable program with a `fn main()` entry point. Our folders in `apps/*` (like [`apps/schemcraft-cli`](file:///Users/loki/Workspace/GitHub_Repos/xschem_rust/apps/schemcraft-cli/src/main.rs)) and [`xtask`](file:///Users/loki/Workspace/GitHub_Repos/xschem_rust/xtask/src/main.rs) are binary crates.
 
-## 2. What is a Cargo Workspace?
+## 2. How Multi-File Modules Work Inside a Crate (`pub mod` and `pub use`)
+Unlike C or Python, Rust does **not** automatically compile every `.rs` file sitting in `src/`. Instead, [`src/lib.rs`](file:///Users/loki/Workspace/GitHub_Repos/xschem_rust/crates/core/src/lib.rs) is the **table of contents** of the crate.
+
+Look at [`crates/core/src/lib.rs`](file:///Users/loki/Workspace/GitHub_Repos/xschem_rust/crates/core/src/lib.rs):
+```rust
+pub mod document;
+pub mod geometry;
+pub mod graphics;
+pub mod props;
+
+pub use document::{
+    DEFAULT_PIN_SIZE, Document, Instance, Pin, PinDirection, Schematic, Symbol, Wire,
+};
+pub use geometry::{Point, Rotation};
+pub use graphics::{Arc, Graphics, LayerRole, Line, Polygon, Rect, Text};
+pub use props::{Properties, XschemHeaders};
+```
+1. **`pub mod geometry;`** tells the compiler: *"Look for [`crates/core/src/geometry.rs`](file:///Users/loki/Workspace/GitHub_Repos/xschem_rust/crates/core/src/geometry.rs) (or `geometry/mod.rs`), compile it as a submodule, and make it public."*
+2. **Inside submodules, `crate::` refers to the crate root:** For example, [`graphics.rs`](file:///Users/loki/Workspace/GitHub_Repos/xschem_rust/crates/core/src/graphics.rs) imports `Point` from its sibling module by writing `use crate::geometry::{Point, Rotation};`.
+3. **`pub use ...` (The Facade Pattern):** By re-exporting key types at the root of `lib.rs`, each source file stays small and focused (~60–150 lines), while downstream crates can still write a short, ergonomic import like `use schemcraft_core::{Schematic, Symbol, Pin, Point};`!
+
+---
+
+## 3. What is a Cargo Workspace?
 A **Cargo Workspace** lets multiple crates live in one Git repository, share a single `Cargo.lock` (so everyone uses the exact same dependency versions), and share a single `target/` build directory (so dependencies are compiled only once).
 
 Look at the top of [`Cargo.toml`](file:///Users/loki/Workspace/GitHub_Repos/xschem_rust/Cargo.toml):
@@ -26,7 +49,7 @@ exclude = ["reference"]
 
 ---
 
-## 3. Why Strict Layering (`L0` → `L3`)?
+## 4. Why Strict Layering (`L0` → `L3`)?
 
 In many large projects, UI code, file parsing, and circuit math accidentally get tangled together. Soon you can't run a quick test on a netlist without opening a GPU window, and you can't compile to WebAssembly because a deep math file tries to open a desktop file dialog.
 
@@ -37,9 +60,9 @@ flowchart TD
     Apps["Apps: schemcraft-cli / desktop / web"] --> L3["L3: schemcraft-ui-egui<br/>(Window, panels, canvas)"]
     Apps --> L2["L2: schemcraft-engine<br/>(Session, command registry, undo)"]
     L3 --> L2
-    L2 --> L1A["L1: schemcraft-format<br/>(.sch / .sym parser & writer)"]
+    L2 --> L1A["L1: schemcraft-format<br/>(Pluggable codecs: xschem, native S-expr)"]
     L2 --> L1B["L1: schemcraft-netlist<br/>(Connectivity & SPICE output)"]
-    L1A --> L0["L0: schemcraft-core<br/>(Pure data structures & geometry)"]
+    L1A --> L0["L0: schemcraft-core<br/>(Canonical domain model & geometry)"]
     L1B --> L0
 ```
 

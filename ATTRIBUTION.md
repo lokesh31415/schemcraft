@@ -5,7 +5,7 @@ other projects. Add a row whenever ported or copied material lands in the repo.
 
 | Area in SchemCraft | Source project | Source files | License | Notes |
 |---|---|---|---|---|
-| _(none yet)_ | | | | |
+| `.sch`/`.sym` data model (`crates/core`) & format spec (`docs/01-eda-and-xschem/02-xschem-file-format.md`) | xschem (Stefan Frederik Schippers) | `src/xschem.h`, `src/save.c`, `xschem_library/devices/res.sym` | GPL-2.0-or-later | Clean-room Rust data structures modeling xschem's ASCII record format and layer constants (`LAYER_WIRE`, `LAYER_PIN`, etc.). |
 
 ## Inspiration & Planned Sources
 - **xschem** ([Stefan Frederik Schippers](https://github.com/StefanSchippers/xschem), `GPL-2.0-or-later`):
